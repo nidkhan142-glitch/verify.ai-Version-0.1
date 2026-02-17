@@ -33,8 +33,8 @@ const App: React.FC = () => {
     if (storedGuestCredits) {
       setGuestCredits(parseInt(storedGuestCredits, 10));
     } else {
-      localStorage.setItem('guest_credits', '2');
-      setGuestCredits(2);
+      localStorage.setItem('guest_credits', '10');
+      setGuestCredits(10);
     }
   }, []);
 

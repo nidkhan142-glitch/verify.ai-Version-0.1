@@ -3,9 +3,10 @@ import { supabase } from '../supabase';
 
 interface HistoryProps {
   user: any;
+  onViewReport: (report: any, text: string) => void;
 }
 
-export const History: React.FC<HistoryProps> = ({ user }) => {
+export const History: React.FC<HistoryProps> = ({ user, onViewReport }) => {
   const [history, setHistory] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -40,13 +41,13 @@ export const History: React.FC<HistoryProps> = ({ user }) => {
   const clearHistory = async () => {
     if (!user) return;
     if (!confirm('Are you sure you want to wipe your forensic history?')) return;
-    
+
     try {
       const { error } = await supabase
         .from('analyses')
         .delete()
         .eq('user_id', user.id);
-      
+
       if (!error) setHistory([]);
     } catch (err) {
       console.error(err);
@@ -56,8 +57,8 @@ export const History: React.FC<HistoryProps> = ({ user }) => {
   if (!user) {
     return (
       <div className="py-24 flex flex-col items-center justify-center border-2 border-dashed border-slate-800 rounded-3xl opacity-30">
-         <span className="text-4xl mb-4">🗄️</span>
-         <p className="text-slate-400 font-bold uppercase tracking-widest mono text-sm">Login to Track Audits</p>
+        <span className="text-4xl mb-4">🗄️</span>
+        <p className="text-slate-400 font-bold uppercase tracking-widest mono text-sm">Login to Track Audits</p>
       </div>
     );
   }
@@ -85,19 +86,25 @@ export const History: React.FC<HistoryProps> = ({ user }) => {
               <span className="text-[10px] text-slate-600 mono">{new Date(item.created_at).toLocaleDateString()}</span>
             </div>
             <div className="space-y-2">
-              <h4 className={`text-2xl font-black ${item.score > 50 ? 'text-red-400' : 'text-emerald-400'}`}>{item.score}% Alignment</h4>
-              <p className="text-slate-500 text-xs line-clamp-2">{item.input_text.substring(0, 100)}...</p>
+              <h4 className={`text-2xl font-black ${(item.likelihood || 0) > 50 ? 'text-red-400' : 'text-emerald-400'}`}>{item.likelihood || 0}% Alignment</h4>
+              <p className="text-slate-500 text-xs line-clamp-2">{(item.text || '').substring(0, 100)}...</p>
             </div>
-            <div className="pt-4 border-t border-slate-800 flex justify-between items-center">
+            <div className="pt-4 border-t border-slate-800 flex flex-col gap-4">
               <span className="text-[10px] text-slate-500 font-bold mono uppercase tracking-widest">
-                Verdict: {item.verdict}
+                Verdict: {item.data?.verdict || 'Analyzed'}
               </span>
+              <button
+                onClick={() => onViewReport(item.data, item.text)}
+                className="w-full py-2 bg-emerald-500/10 text-emerald-400 text-[10px] font-bold rounded uppercase tracking-widest mono hover:bg-emerald-500/20 transition-all border border-emerald-500/20 group-hover:border-emerald-500/40"
+              >
+                Open Archive
+              </button>
             </div>
           </div>
         )) : (
           <div className="col-span-full py-24 flex flex-col items-center justify-center border-2 border-dashed border-slate-800 rounded-3xl opacity-30">
-             <span className="text-4xl mb-4">🗄️</span>
-             <p className="text-slate-400 font-bold uppercase tracking-widest mono text-sm">Empty Repository</p>
+            <span className="text-4xl mb-4">🗄️</span>
+            <p className="text-slate-400 font-bold uppercase tracking-widest mono text-sm">Empty Repository</p>
           </div>
         )}
       </div>

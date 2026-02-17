@@ -1,88 +1,124 @@
-/* Verify AI - Global Stylesheet */
+@import "tailwindcss";
+
+@theme {
+  --color-emerald-400: #34d399;
+  --color-emerald-500: #10b981;
+  --color-slate-900: #0f172a;
+  --color-slate-800: #1e293b;
+  --color-slate-400: #94a3b8;
+  --color-slate-300: #cbd5e1;
+
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+:root {
+  --background: oklch(0.02 0.01 250);
+  /* Dark Navy Base: #020617 */
+  --foreground: oklch(1 0 0);
+  --card: oklch(0.1 0 0 / 0.1);
+  --card-foreground: oklch(1 0 0);
+  --popover: oklch(0 0 0 / 0.8);
+  --popover-foreground: oklch(1 0 0);
+  --primary: oklch(1 0 0);
+  --primary-foreground: oklch(0 0 0);
+  --secondary: oklch(0.65 0.25 160);
+  /* Emerald Mid */
+  --secondary-foreground: oklch(1 0 0);
+  --muted: oklch(1 0 0 / 0.5);
+  --muted-foreground: oklch(0.7 0 0);
+  --accent: oklch(0.65 0.25 160);
+  /* Emerald Accent */
+  --accent-foreground: oklch(1 0 0);
+  --destructive: oklch(0.6 0.25 15);
+  --destructive-foreground: oklch(1 0 0);
+  --border: oklch(1 0 0 / 0.2);
+  --input: oklch(1 0 0 / 0.1);
+  --ring: oklch(1 0 0 / 0.3);
+  --radius: 0.5rem;
+  --font-geist-sans: "Geist Sans", sans-serif;
+  --font-geist-mono: "Geist Mono", monospace;
+}
+
+.dark {
+  --background: oklch(0 0 0);
+  --foreground: oklch(1 0 0);
+  --card: oklch(0.1 0 0 / 0.1);
+  --card-foreground: oklch(1 0 0);
+  --popover: oklch(0 0 0 / 0.8);
+  --popover-foreground: oklch(1 0 0);
+  --primary: oklch(1 0 0);
+  --primary-foreground: oklch(0 0 0);
+  --secondary: oklch(0.65 0.25 160);
+  --secondary-foreground: oklch(1 0 0);
+  --muted: oklch(1 0 0 / 0.5);
+  --muted-foreground: oklch(0.7 0 0);
+  --accent: oklch(0.65 0.25 160);
+  --accent-foreground: oklch(1 0 0);
+  --destructive: oklch(0.6 0.25 15);
+  --destructive-foreground: oklch(1 0 0);
+  --border: oklch(1 0 0 / 0.2);
+  --input: oklch(1 0 0 / 0.1);
+  --ring: oklch(1 0 0 / 0.3);
+}
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
-    background-color: #020617;
+    background-color: transparent;
     color: #f8fafc;
     font-family: 'Inter', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
-    scroll-behavior: smooth;
   }
 }
 
 /* Typography Tokens */
-.mono { 
-  font-family: 'JetBrains Mono', monospace; 
+.mono {
+  font-family: 'JetBrains Mono', monospace;
 }
 
-/* Forensic Animation Suite */
-@keyframes fadeIn { 
-  from { opacity: 0; } 
-  to { opacity: 1; } 
+.space-grotesk {
+  font-family: 'Space Grotesk', sans-serif;
 }
 
-@keyframes slideInBottom { 
-  from { transform: translateY(2rem); opacity: 0; } 
-  to { transform: translateY(0); opacity: 1; } 
+/* Animations */
+@keyframes pulseGlow {
+  0% {
+    box-shadow: 0 0 5px rgba(16, 185, 129, 0.2);
+  }
+
+  50% {
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
+  }
+
+  100% {
+    box-shadow: 0 0 5px rgba(16, 185, 129, 0.2);
+  }
 }
 
-@keyframes floating { 
-  0% { transform: translateY(0px); } 
-  50% { transform: translateY(-15px); } 
-  100% { transform: translateY(0px); } 
+.animate-pulse {
+  animation: pulseGlow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
-@keyframes pulseGlow { 
-  0% { box-shadow: 0 0 5px rgba(16, 185, 129, 0.2); } 
-  50% { box-shadow: 0 0 20px rgba(16, 185, 129, 0.4); } 
-  100% { box-shadow: 0 0 5px rgba(16, 185, 129, 0.2); } 
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
 }
 
-/* Animation Utilities */
-.animate-in { 
-  animation-fill-mode: both; 
+::-webkit-scrollbar-track {
+  background: #020617;
 }
 
-.fade-in { 
-  animation-name: fadeIn; 
-}
-
-.slide-in-from-bottom-12 { 
-  animation-name: slideInBottom; 
-}
-
-.animate-floating { 
-  animation: floating 4s ease-in-out infinite; 
-}
-
-/* Thematic Scrollbar */
-::-webkit-scrollbar { 
-  width: 6px; 
-}
-
-::-webkit-scrollbar-track { 
-  background: #020617; 
-}
-
-::-webkit-scrollbar-thumb { 
-  background: #1e293b; 
-  border-radius: 10px; 
-  border: 1px solid #334155;
+::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: #10b981;
-}
-
-/* Custom UI Components used in forensic audits */
-.glass-panel {
-  background: rgba(15, 23, 42, 0.6);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.glow-emerald {
-  filter: drop-shadow(0 0 10px rgba(16, 185, 129, 0.3));
 }

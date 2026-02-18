@@ -313,7 +313,7 @@ export const AnalysisTool = forwardRef<any, AnalysisToolProps>(({
 
       const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
       const model = genAI.getGenerativeModel({
-        model: "gemini-2.0-flash",
+        model: "gemini-flash-latest",
         systemInstruction: `You are a forensic authorship classifier, not a writer, editor, scorer, or formatter.
 Your only task is to analyze individual sentences in isolation and classify their authorship characteristics.
 You must not perform: character indexing, sentence splitting, score aggregation, mathematical tallying, document-level reasoning, heatmap logic, or UI reasoning.

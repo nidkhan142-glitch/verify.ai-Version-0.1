@@ -311,18 +311,17 @@ export const AnalysisTool = forwardRef<any, AnalysisToolProps>(({
         sentences.push({ id: 1, text: text, start: 0, end: text.length });
       }
 
-      const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
-      const model = genAI.getGenerativeModel({
-        model: "gemini-flash-latest",
-        systemInstruction: `You are a forensic authorship classifier, not a writer, editor, scorer, or formatter.
+      // OpenRouter API Configuration
+      const openRouterKey = import.meta.env.VITE_OPENROUTER_API_KEY;
+
+      const systemInstruction = `You are a forensic authorship classifier, not a writer, editor, scorer, or formatter.
 Your only task is to analyze individual sentences in isolation and classify their authorship characteristics.
 You must not perform: character indexing, sentence splitting, score aggregation, mathematical tallying, document-level reasoning, heatmap logic, or UI reasoning.
-All structural alignment, indexing, and scoring are handled outside of you.`
-      });
+All structural alignment, indexing, and scoring are handled outside of you.`;
 
       const formattedSentences = sentences.map(s => `ID ${s.id}: ${s.text.trim()}`).join('\n');
 
-      const prompt = `OUTPUT REQUIREMENTS (STRICT)
+      const userPrompt = `OUTPUT REQUIREMENTS (STRICT)
 Return valid JSON only. No markdown. No commentary.
 
 REQUIRED TOP-LEVEL STRUCTURE:
@@ -347,9 +346,29 @@ ${formattedSentences}
 
 Return JSON. End response.`;
 
-      const result = await model.generateContent(prompt);
-      const response = await result.response;
-      const rawText = response.text();
+      const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${openRouterKey}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          "model": "google/gemini-2.0-flash-001",
+          "messages": [
+            { "role": "system", "content": systemInstruction },
+            { "role": "user", "content": userPrompt }
+          ],
+          "response_format": { "type": "json_object" }
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(`Forensic engine error: ${errorData.error?.message || response.statusText}`);
+      }
+
+      const openAiData = await response.json();
+      const rawText = openAiData.choices[0].message.content;
       const cleanedText = cleanJson(rawText);
       const rawData = JSON.parse(cleanedText);
 

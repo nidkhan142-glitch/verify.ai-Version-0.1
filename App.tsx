@@ -12,6 +12,7 @@ import { History } from './components/History';
 import { AuthModals } from './components/AuthModals';
 import { LimitReachedModal } from './components/LimitReachedModal';
 import { supabase } from './supabase';
+import { Analytics } from "@vercel/analytics/react";
 
 export enum AuthMode {
   NONE = 'NONE',
@@ -185,6 +186,7 @@ const App: React.FC = () => {
       {authMode === AuthMode.LIMIT_REACHED && (
         <LimitReachedModal onContinue={() => setAuthMode(AuthMode.SIGNUP)} onClose={() => setAuthMode(AuthMode.NONE)} />
       )}
+      <Analytics />
     </div>
   );
 };

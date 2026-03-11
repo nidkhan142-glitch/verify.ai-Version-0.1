@@ -13,6 +13,7 @@
     "@react-three/drei": "^9.96.1",
     "@react-three/fiber": "^8.18.0",
     "@supabase/supabase-js": "2.45.4",
+    "@vercel/analytics": "^1.6.1",
     "framer-motion": "^12.34.1",
     "groq-sdk": "^0.37.0",
     "jspdf": "2.5.1",
